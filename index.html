@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#f8e5ec">
+<title>365 Days of You ❤️</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ALLOW SCROLLING TO FIX OVERLAPS ON SMALL SCREENS */
+body{
+ font-family:Georgia,serif;
+ background:#f8e5ec;
+ color:#783b56;
+ overflow-x:hidden;
+ overflow-y:auto; 
+}
+.page{
+ display:none;
+ min-height:100dvh; /* Allows page to expand if content is long */
+ width:100%;
+ padding:50px 22px 130px; /* Big bottom padding to stay far away from buttons */
+ text-align:center;
+ background:linear-gradient(145deg,#fff5f8,#f4d9e4,#fff5ee);
+ position:relative;
+}
+.page.active{
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ animation:pageIn .45s ease;
+}
+@keyframes pageIn{
+ from{opacity:0;transform:translateX(18px)}
+ to{opacity:1;transform:translateX(0)}
+}
+.eyebrow{
+ letter-spacing:3px;
+ font:600 11px Arial;
+ color:#ad6481;
+ text-transform:uppercase;
+ margin-bottom:14px;
+}
+h1{
+ color:#a84370;
+ font-size:clamp(35px,9vw,65px);
+ font-weight:normal;
+ line-height:1.15;
+ margin:15px 0;
+}
+h2{
+ color:#a84370;
+ font-size:clamp(25px,7vw,40px);
+ font-weight:normal;
+ line-height:1.25;
+ margin:12px 0;
+}
+.script{font-style:italic}
+p{
+ font:14px/1.8 Arial,sans-serif;
+ color:#79566a;
+}
+button{
+ border:0;
+ border-radius:40px;
+ padding:15px 23px;
+ font-size:14px;
+ background:linear-gradient(120deg,#b84f78,#d88da8);
+ color:white;
+ box-shadow:0 7px 22px #bd668a45;
+ cursor:pointer;
+}
+.main-btn{margin-top:28px}
+.nav{
+ display:none;
+}
+.nav.visible{display:block}
+.nav button{
+ position:fixed;
+ bottom:17px;
+ z-index:50;
+ min-width:88px;
+}
+#backBtn{
+ left:15px;
+ background:#fffaf7;
+ color:#a64b73;
+ border:1px solid #e9c4d3;
+ box-shadow:none;
+}
+#nextBtn{right:15px;min-width:105px}
+#counter{
+ position:fixed;
+ bottom:29px;
+ left:50%;
+ transform:translateX(-50%);
+ font:12px Arial;
+ color:#9f6c82;
+ z-index:50;
+}
+.progress{
+ position:fixed;
+ top:0;
+ left:0;
+ height:4px;
+ width:100%;
+ background:#efd0dc;
+ z-index:100;
+}
+.progress-bar{
+ height:100%;
+ width:0;
+ background:#b84f78;
+ transition:width .4s;
+}
+
+/* FIREWORKS & NEW ANIMATION */
+
+#blast{
+ display:none;
+ position:fixed;
+ inset:0;
+ z-index:200;
+ background:radial-gradient(circle,#fff8fb,#f6cbdc,#e9a8c3);
+ overflow:hidden;
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ padding:20px;
+}
+#blast.active{display:flex}
+
+.blast-message {
+ position: absolute;
+ z-index: 210;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ opacity: 0;
+ animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s forwards, 
+            floatText 3s ease-in-out infinite 1.3s;
+}
+.blast-message h1 {
+ font-size: clamp(32px, 8vw, 55px);
+ color: #a84370;
+ line-height: 1.2;
+ margin: 0;
+}
+.blast-message .highlight {
+ font-size: clamp(45px, 11vw, 75px);
+ background: linear-gradient(120deg, #b84f78, #e58da8);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ filter: drop-shadow(0 4px 15px rgba(216, 141, 168, 0.5));
+ margin-top: 5px;
+}
+
+@keyframes popIn {
+ 0% { opacity: 0; transform: scale(0.5) translateY(40px); }
+ 100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes floatText {
+ 0%, 100% { transform: translateY(0); }
+ 50% { transform: translateY(-12px); }
+}
+
+.particle{
+ position:absolute;
+ left:50%;
+ top:50%;
+ z-index: 205;
+ animation: explode forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+@keyframes explode{
+ 0%{opacity:1;transform:translate(-50%,-50%) scale(0) rotate(0deg)}
+ 80%{opacity:1}
+ 100%{
+  opacity:0;
+  transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(720deg) scale(1.5);
+ }
+}
+
+/* ACHIEVEMENT */
+
+.achievement{
+ width:100%;
+ max-width:410px;
+ background:#fffaf7;
+ border:1px solid #e8c6d3;
+ border-radius:25px;
+ padding:27px 18px;
+ box-shadow:0 12px 35px #9e527018;
+ margin-top:20px;
+}
+.number{font-size:clamp(75px,20vw,100px);color:#b84f78}
+.gem{font-size:15px;letter-spacing:2px;margin:10px}
+
+/* APPRECIATION CARDS */
+
+.cards{
+ width:100%;
+ max-width:410px;
+ display:grid;
+ grid-template-columns:1fr;
+ gap:12px;
+}
+.card{
+ background:#fffaf7;
+ padding:19px;
+ border-radius:19px;
+ border:1px solid #edcedb;
+ text-align:left;
+ box-shadow:0 6px 18px #9e527010;
+ width:100%;
+}
+.card span{font-size:27px}
+.card h3{
+ color:#a64b73;
+ font-size:19px;
+ font-weight:normal;
+ margin:7px 0;
+}
+.card p{font-size:13px;line-height:1.65}
+
+/* LETTER MODAL */
+
+.letter-modal {
+ display: none;
+ position: fixed;
+ inset: 0;
+ z-index: 300;
+ background: rgba(255, 245, 248, 0.97);
+ backdrop-filter: blur(8px);
+ overflow-y: auto;
+ padding: 40px 20px;
+ text-align: center;
+ flex-direction: column;
+ align-items: center;
+}
+.letter-modal.active {
+ display: flex;
+ animation: pageIn .4s ease;
+}
+.letter-modal .letter-box {
+ background: #fffdf9;
+ width: 100%;
+ max-width: 430px;
+ border: 1px solid #ecd8ce;
+ border-radius: 20px;
+ padding: 30px 22px;
+ text-align: left;
+ box-shadow: 0 15px 40px #9e527020;
+ margin-bottom: 30px;
+}
+.letter-modal p {
+ font-size: 14px;
+ line-height: 1.8;
+ color: #664c5a;
+ margin-bottom: 18px;
+}
+.letter-modal p:last-child { margin-bottom: 0; }
+.letter-modal strong { color: #a64b73; }
+.letter-heading {
+ font-size: 16px;
+ color: #b2768e;
+ font-style: italic;
+ margin-bottom: 18px;
+ text-align: center;
+ font-weight: bold;
+}
+
+/* FINAL PAGE ELEMENTS */
+
+.tulip{
+ font-size:65px;
+ animation:sway 3s infinite ease-in-out;
+ margin-bottom:10px;
+}
+@keyframes sway{50%{transform:rotate(8deg)}}
+.footer{
+ margin-top:25px;
+ font:12px Arial;
+ color:#a77b8e;
+ position:relative;
+ z-index:10;
+}
+
+@media(max-height:650px){
+ .page{padding-top:40px;padding-bottom:110px}
+ h1{font-size:32px;margin:10px 0}
+ h2{font-size:24px;margin:8px 0}
+ p{font-size:12px;line-height:1.6}
+ .card{padding:12px}
+ .card p{font-size:12px}
+ .letter-modal p {font-size: 13px; line-height: 1.65;}
+ .tulip{font-size: 50px;}
+}
+</style>
+</head>
+
+<body>
+
+<div id="blast"></div>
+
+<div class="progress">
+ <div class="progress-bar" id="progress"></div>
+</div>
+
+<!-- PAGE 1: WELCOME -->
+
+<section class="page active">
+ <div class="eyebrow">A little celebration made just for you</div>
+ <h1 class="script">Heyyy my<br>babyyyy luuuu...</h1>
+ <p>
+ Today isn't just another day.
+ It's a celebration of your hard work,
+ your growth and everything beautiful
+ that makes you YOU. ❤️
+ </p>
+ <button class="main-btn" onclick="startBlast()">
+ OPEN YOUR SURPRISE ❤️
+ </button>
+</section>
+
+<!-- PAGE 2: ACHIEVEMENT -->
+
+<section class="page">
+ <div class="eyebrow">Your first milestone</div>
+ <h2>Look at you, shining! ✨</h2>
+ <p>
+ One whole year of learning, showing up,
+ solving challenges, building skills and
+ becoming an even stronger version of yourself.
+ </p>
+
+ <div class="achievement">
+  <div class="number">365</div>
+  <div class="gem">DAYS OF DEDICATION & GROWTH</div>
+  <h2>One Beautiful Year at Virtues</h2>
+  <p>And this is only the beginning, kannamma.</p>
+ </div>
+</section>
+
+<!-- PAGE 3: APPRECIATION -->
+
+<section class="page">
+ <div class="eyebrow">What I see in you</div>
+ <h2>My Very Own GEM Employee 💎</h2>
+ <p style="margin-bottom:18px">
+ Nuvvu Virtues company ki dorikina oka GEM employee vi. ❤️
+ </p>
+
+ <div class="cards">
+  <div class="card">
+   <span>💎</span>
+   <h3>A True GEM</h3>
+   <p>
+   You bring so much value through the person
+   and professional you are.
+   </p>
+  </div>
+  <div class="card">
+   <span>⏳</span>
+   <h3>Beyond the Clock</h3>
+   <p>
+   You go beyond your standards and your timings,
+   putting in extra hours whenever needed.
+   </p>
+  </div>
+ </div>
+</section>
+
+<!-- PAGE 4: APPRECIATION -->
+
+<section class="page">
+ <div class="eyebrow">Your dedication</div>
+ <h2>Hard Work That Inspires ❤️</h2>
+
+ <div class="cards">
+  <div class="card">
+   <span>🌷</span>
+   <h3>So Much Dedication</h3>
+   <p>
+   Sometimes Saturdays kuda work chesthav.
+   Your commitment and effort never go unnoticed by me.
+   </p>
+  </div>
+  <div class="card">
+   <span>🌱</span>
+   <h3>Always Growing</h3>
+   <p>
+   Telisi teliyaka chesina mistakes ni correct
+   cheskuntav, learn avuthav, improve avuthav
+   and do better next time.
+   </p>
+  </div>
+ </div>
+</section>
+
+<!-- PAGE 5: APPRECIATION -->
+
+<section class="page">
+ <div class="eyebrow">Your achievements</div>
+ <h2>You're Truly Exceptional ⭐</h2>
+
+ <div class="cards">
+  <div class="card">
+   <span>⭐</span>
+   <h3>Exceptional Skills</h3>
+   <p>
+   You have wonderful skills, so much potential
+   and the ability to keep learning.
+   Nijam ga, you are a different-level employee.
+   </p>
+  </div>
+  <div class="card">
+   <span>👏</span>
+   <h3>Recognition You Earned</h3>
+   <p>
+   You've made people appreciate and praise your
+   work through your own efforts. Be proud of that.
+   </p>
+  </div>
+ </div>
+
+ <p style="margin-top:18px">
+ A company ki nee lanti employee dorakadam
+ really adds so much value. ❤️
+ </p>
+</section>
+
+<!-- PAGE 6: LETTER OPENING -->
+
+<section class="page">
+ <div class="eyebrow">A letter from me to you</div>
+ <h2>Something I Want You to Read...</h2>
+ <p>
+ I could say congratulations in one line,
+ but you deserve so much more than that.
+ </p>
+
+ <div class="achievement" style="padding:35px 15px; cursor: pointer; transition: transform 0.2s;" onclick="openLetter()" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+  <div style="font-size:65px">💌</div>
+  <h2>Click to Open Your Little Letter, Kannamma</h2>
+  <p>Every word is written with all my heart. ❤️</p>
+ </div>
+</section>
+
+<!-- THE FULL SCROLLABLE LETTER MODAL -->
+<div id="letterModal" class="letter-modal">
+ <h2 style="margin-top: 10px;">First of All... ❤️</h2>
+ 
+ <div class="letter-box">
+  <div class="letter-heading">My babyyyy luuuu ❤️</div>
+  
+  <p><strong>Happyyyy one year work anniversary, kannammaaaaa! 🥳❤️😘</strong></p>
+  
+  <p>First of all, I want to tell you how incredibly proud I am of you. Today is one of the most beautiful and important days for you, and honestly, I've also been waiting for this day. I'm feeling so so happy seeing you complete this one beautiful year in your professional journey.</p>
+  
+  <p>I know how much this day means to you, and I want you to know that it means a lot to me too because I get to celebrate your happiness, your hard work and your achievements along with you. ❤️</p>
+  
+  <p>One whole year of learning, working hard, facing challenges, overcoming difficulties, gaining experience and growing into an even better version of yourself. It's not just one year on the calendar, baby. It's one year filled with your efforts, dedication, patience, sacrifices and so many little achievements that deserve to be celebrated.</p>
+  
+  <p>And you know what, baby? <strong>Nuvvu Virtues company ki dorikina oka GEM employee vi.</strong> ❤️ I genuinely mean it when I say this. You don't just work according to your standards or within your working hours. You always go beyond your standards, beyond your timings and put in so much extra effort.</p>
+  
+  <p>Sometimes you even work extra hours, sometimes Saturdays kuda work chesthav, just to make sure your work is done properly. Telisi teliyaka chesina mistakes ni kuda correct cheskuntav, learn avuthav, improve avuthav and make sure you do better next time. That's something I really admire about you.</p>
+  
+  <p>You have such wonderful skills, so much potential and such a great ability to learn and improve. Nijam ga chepthunna, you are a different-level employee, kannamma. Not everyone puts in the kind of dedication and hard work that you do.</p>
+  
+  <p>A company ki nee lanti employee dorakadam really adds so much value. With your dedication, skills and commitment, you can contribute to so many achievements and make such a positive difference to the organisation.</p>
+  
+  <p>And the way you've worked, the way you've built your place there and made people recognise and appreciate your work makes me even happier. You've made people praise your work through your own efforts, and that's something you should always be proud of.</p>
+  
+  <p>I hope you never underestimate yourself or your capabilities, baby. I know sometimes you might feel tired, sometimes things might be difficult, sometimes you might feel that you're not doing enough, but I want you to remember one thing: <strong>YOU ARE DOING GREAT.</strong></p>
+  
+  <p>You have so much more potential, and I genuinely believe you're going to achieve so many bigger things in your career. I don't just want to celebrate this one-year milestone. I want to celebrate every single achievement of yours, every promotion, every appreciation, every new opportunity, every milestone and every little victory.</p>
+  
+  <p>I want to see you grow, reach higher positions, receive the recognition you deserve and achieve everything you've ever dreamed of. <strong>I'm really, really proud of you, my girl. ❤️🥹</strong></p>
+  
+  <p>Keep rocking like this, keep shining, always give your best, keep learning, keep growing better and achieve many more beautiful milestones. I wish you complete many more successful years like this, reach incredible heights in your career and make yourself even more proud of the person you're becoming.</p>
+  
+  <p>And no matter how many years pass, I'll always be happy to celebrate your achievements and cheer for you. Your happiness makes me happy, your success makes me proud, and seeing you grow is one of the most beautiful things for me.</p>
+  
+  <p><strong>Once again, Happyyyy One Year Work Anniversary, my babyyyy luuuuu! ❤️🫂</strong></p>
+  
+  <p>So so so proud of you, kannammaaaaa. Keep shining and keep making everyone admire the amazing person and employee you are.</p>
+  
+  <p style="text-align: center; font-size: 16px; margin-top: 25px;"><strong>Love you so muchhhhh! 😘💗</strong></p>
+ </div>
+ 
+ <button onclick="closeLetter()" style="margin-bottom: 40px; padding: 18px 30px; font-size: 15px;">
+  CLOSE & CONTINUE ❤️
+ </button>
+</div>
+
+
+<!-- PAGE 7: FINAL SURPRISE -->
+
+<section class="page">
+ <div class="tulip">🌷</div>
+ <div class="eyebrow">And one last thing...</div>
+
+ <h1>
+  I'm So Proud of You,<br>My Girl. ❤️
+ </h1>
+
+ <p>
+  A successful employee to Virtues, a beautiful person to the world, and my favourite person in the entire universe.
+ </p>
+
+ <p style="margin-top:15px">
+  This is only your first year, kannamma. I can't wait to celebrate your 2nd, 5th, 10th and many more successful years. I'll always be your biggest supporter.
+ </p>
+
+ <h2 style="font-size:26px;margin-top:20px">
+  Keep Shining. Keep Growing. Keep Being You. ✨
+ </h2>
+
+ <div class="footer">
+  Made with all my love, just for you. ❤️
+ </div>
+</section>
+
+<!-- NAVIGATION -->
+
+<div class="nav" id="navigation">
+ <button id="backBtn" onclick="changePage(-1)">← BACK</button>
+ <div id="counter">1 / 7</div>
+ <button id="nextBtn" onclick="changePage(1)">NEXT →</button>
+</div>
+
+<script>
+const pages = document.querySelectorAll(".page");
+const nav = document.getElementById("navigation");
+const progress = document.getElementById("progress");
+const counter = document.getElementById("counter");
+const backBtn = document.getElementById("backBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+let currentPage = 0;
+let blastFinished = false;
+
+function updatePage(){
+ pages.forEach((page,index)=>{
+  page.classList.toggle("active",index===currentPage);
+ });
+
+ nav.classList.toggle("visible",currentPage!==0);
+ counter.textContent=(currentPage+1)+" / "+pages.length;
+ progress.style.width=((currentPage+1)/pages.length*100)+"%";
+ backBtn.style.display=currentPage===0?"none":"block";
+ nextBtn.style.display=currentPage===pages.length-1?"none":"block";
+
+ if(currentPage === 5) {
+   nextBtn.style.display = "none";
+ }
+ 
+ // Scroll to top when changing pages
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function changePage(direction){
+ const next=currentPage+direction;
+ if(next<0||next>=pages.length)return;
+ currentPage=next;
+ updatePage();
+}
+
+/* LETTER FUNCTIONS */
+function openLetter() {
+ document.getElementById("letterModal").classList.add("active");
+ document.getElementById("letterModal").scrollTop = 0; 
+}
+
+function closeLetter() {
+ document.getElementById("letterModal").classList.remove("active");
+ if(currentPage === 5) {
+   changePage(1);
+ }
+}
+
+/* GRAND FIREWORKS BLAST */
+function startBlast(){
+ if(blastFinished)return;
+ blastFinished=true;
+
+ const blast=document.getElementById("blast");
+ blast.innerHTML = ''; 
+ blast.classList.add("active");
+
+ const msg = document.createElement("div");
+ msg.className = "blast-message";
+ msg.innerHTML = `
+  <h1>Happy one year anniversary,</h1>
+  <h1 class="highlight script">Kannamma! ❤️</h1>
+ `;
+ blast.appendChild(msg);
+
+ const symbols=["✦","♥","✧","✿","★","❤","✨"];
+ const colors=["#bd6d8b","#d5a54f","#fff9fc","#e99ab6","#a94f77"];
+
+ for(let i=0;i<150;i++){
+  const particle=document.createElement("span");
+  particle.className="particle";
+  particle.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+  
+  const angle=Math.random()*Math.PI*2;
+  const velocity= 150 + Math.random()*700;
+  
+  particle.style.setProperty("--tx", Math.cos(angle)*velocity+"px");
+  particle.style.setProperty("--ty", (Math.sin(angle)*velocity + 150)+"px"); 
+  
+  particle.style.color=colors[Math.floor(Math.random()*colors.length)];
+  particle.style.fontSize = (14 + Math.random() * 22) + "px";
+  
+  particle.style.animationDelay=Math.random()*.4+"s";
+  particle.style.animationDuration=(1.5 + Math.random()*1.5)+"s";
+  
+  blast.appendChild(particle);
+ }
+
+ setTimeout(()=>{
+  blast.classList.remove("active");
+  currentPage=1;
+  updatePage();
+ }, 4500);
+}
+
+updatePage();
+</script>
+
+</body>
+</html>
